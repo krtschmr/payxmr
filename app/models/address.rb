@@ -14,6 +14,20 @@ class Address < ApplicationRecord
     self.secret ||=  generate_secret
   }
 
+
+  def dns_hash
+    {
+      name: "#{self.alias}.moneropay.com",
+      TTL: 60,
+      Type: "TXT",
+      "TXT Data": txt_data
+    }
+  end
+
+  def txt_data
+    "oa1:#{coin} recipient_address=#{address}; recipient_name=#{self.alias} via moneropay.com\; tx_description=#{self.alias}\;"
+  end
+
   private
 
   def non_reserved_alias
